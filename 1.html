@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线课堂系统</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --light-color: #f0f4f8;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "header header"
+                "main sidebar"
+                "footer footer";
+            height: 100vh;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .user-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        main {
+            grid-area: main;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .video-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+            flex: 1;
+            position: relative;
+        }
+
+        #video-player {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .controls-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .interaction-panel {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            height: 300px;
+        }
+
+        .interaction-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .question-container {
+            margin-top: 15px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            padding: 12px;
+            background-color: var(--light-color);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #e0e7f1;
+            border-color: var(--primary-color);
+        }
+
+        .option-btn.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .sidebar {
+            grid-area: sidebar;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .participants {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+            flex: 1;
+        }
+
+        .participant-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .participant {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .participant:last-child {
+            border-bottom: none;
+        }
+
+        .participant-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .stats-panel {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background-color: var(--primary-color);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 1px;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            grid-area: footer;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "sidebar"
+                    "footer";
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">
+            <div class="logo-icon">🎓</div>
+            <h1>在线课堂系统</h1>
+        </div>
+        <div class="user-controls">
+            <div class="class-info">
+                <strong>数学课：微积分基础</strong> | 王教授
+            </div>
+            <button class="btn btn-warning">
+                <span>🔔</span> 举手提问
+            </button>
+            <button class="btn btn-danger">
+                <span>🚪</span> 离开课堂
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="video-container">
+            <video id="video-player" controls></video>
+            <div class="video-controls">
+                <button class="controls-btn">🎙️</button>
+                <button class="controls-btn">📹</button>
+                <button class="controls-btn">🖥️</button>
+                <button class="controls-btn">🔈</button>
+                <button class="controls-btn">💬</button>
+            </div>
+        </div>
+
+        <div class="interaction-panel">
+            <div class="interaction-header">
+                <h2>课堂互动</h2>
+                <button class="btn btn-primary" id="new-question-btn">+ 发起提问</button>
+            </div>
+
+            <div class="question-container">
+                <h3>当前问题</h3>
+                <p>以下哪个是微积分基本定理的正确表述？</p>
+
+                <div class="options">
+                    <div class="option-btn">A. 微分和积分是互逆运算</div>
+                    <div class="option-btn">B. 导数描述函数变化率</div>
+                    <div class="option-btn selected">C. 积分是微分的逆运算</div>
+                    <div class="option-btn">D. 微分用于求曲线斜率</div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-primary" style="padding: 10px 30px;">提交答案</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="sidebar">
+        <div class="participants">
+            <h2>课堂成员 (42)</h2>
+            <div class="participant-list">
+                <div class="participant">
+                    <div class="participant-icon">师</div>
+                    <div>王教授 (教师)</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-icon">张</div>
+                    <div>张三</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-icon">李</div>
+                    <div>李四</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-icon">王</div>
+                    <div>王五</div>
+                </div>
+                <div class="participant">
+                    <div class="participant-icon">赵</div>
+                    <div>赵六</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <h2>答题统计</h2>
+            <div class="chart-container">
+                <div class="chart-bar" style="height: 80%;">
+                    <span class="chart-label">A (15%)</span>
+                </div>
+                <div class="chart-bar" style="height: 30%;">
+                    <span class="chart-label">B (5%)</span>
+                </div>
+                <div class="chart-bar" style="height: 100%;">
+                    <span class="chart-label">C (75%)</span>
+                </div>
+                <div class="chart-bar" style="height: 20%;">
+                    <span class="chart-label">D (5%)</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <footer>
+        <p>© 2023 在线课堂系统 | 基于Go语言构建 | 实时通信技术: WebRTC + WebSocket</p>
+    </footer>
+</div>
+
+<script>
+    // 模拟交互功能
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            this.classList.add('selected');
+        });
+    });
+
+    // 模拟发起新问题
+    document.getElementById('new-question-btn').addEventListener('click', function() {
+        alert('新问题已发送给学生端！');
+        // 在实际应用中，这里会通过WebSocket发送问题到服务器
+    });
+
+    // 初始化视频播放器
+    const videoPlayer = document.getElementById('video-player');
+    videoPlayer.innerHTML = '<source src="http://localhost:7001/live/class1.flv" type="video/x-flv">';
+</script>
+</body>
+</html>

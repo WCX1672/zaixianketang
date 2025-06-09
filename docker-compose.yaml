@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  signal-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.signal
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+
+  live-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.live
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - STUN_SERVER=stun:stun.l.google.com:19302
+
+  interact-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.interact
+    ports:
+      - "8082:8082"
+    environment:
+      - PORT=8082
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - SIGNAL_ADDR=http://signal-server:8080
+      - LIVE_ADDR=http://live-server:8081
+      - INTERACT_ADDR=http://interact-server:8082
+
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:

@@ -1,0 +1,28 @@
+# 通用配置
+logging:
+  level: "info"
+
+# 信令服务配置
+signal:
+  port: 8080
+  max_connections: 1000
+
+# 直播服务配置
+live:
+  port: 8081
+  stun_servers:
+    - "stun:stun.l.google.com:19302"
+    - "stun:stun1.l.google.com:19302"
+  ice_timeout: 30s
+
+# 互动服务配置
+interact:
+  port: 8082
+  redis:
+    addr: "redis:6379"
+    timeout: 5s
+
+# API网关配置
+gateway:
+  port: 8000
+  timeout: 15s
