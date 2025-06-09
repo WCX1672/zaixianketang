@@ -1,8 +1,0 @@
-go 1.23.2
-
-use (
-	.
-	livego-0.0.20
-	livego-0.0.20/livego-0.0.20
-	livego-master
-)
