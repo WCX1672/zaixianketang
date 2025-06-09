@@ -1,0 +1,15 @@
+[server]
+port = ":8081"
+max_questions = 1000  # 内存中保存的最大问题数
+
+[database]
+# 如果使用持久化存储，可配置数据库连接
+# type = "postgres"
+# dsn = "host=localhost user=classroom dbname=classroom password=secret sslmode=disable"
+
+[log]
+level = "info"
+path = "./logs/classroom.log"
+
+[question_types]
+enabled = ["choice", "true_false", "short_answer"]
